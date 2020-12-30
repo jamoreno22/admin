@@ -33,11 +33,11 @@ func main() {
 		split2:= strings.Split(split[0], ".")
 		switch split[0] {
 		case "Create" :
-			l3.Command{action : 1, name = split2[0], domain = split2[1], option = "", parameter = ""}
+			l3.Command{action : 1, name : split2[0], domain : split2[1], option : "", parameter : ""}
 		case "Update" :
-			l3.Command{action : 2, name = split2[0], domain = split2[1], option = split[2], parameter = split[3]}
+			l3.Command{action : 2, name : split2[0], domain : split2[1], option : split[2], parameter : split[3]}
 		case "Delete" :
-			l3.Command{action : 3, name = split2[0], domain = split2[1], option = "", parameter = ""}
+			l3.Command{action : 3, name : split2[0], domain : split2[1], option : "", parameter : ""}
 		default:
 			log.Println("Ingrese un comando válido")
 		}
@@ -48,7 +48,7 @@ func main() {
 
 func runDNSIsAvailable(ac l3.BrokerClient, comm string) error {
 	msg := l3.Message{text = comm}
-	_, err := l3.DNSIsAvailable(context.Background(), msg)
+	_, err := l3.DNSIsAvailable(context.Background(), &msg)
 	return err
 }
 
