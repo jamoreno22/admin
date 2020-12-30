@@ -1,21 +1,54 @@
 syntax = "proto3";
 
-option go_package= "admin/pkg/proto";
+option go_package= "github.com/jamoreno22/admin";
 
 package lab3;
 
 service DNS {
 
-    rpc Hola(Message) returns (Message){}
+    rpc Ping(Message) returns (Message){}
+    rpc Action(Command) returns (VectorClock){}
+    rpc Spread(Log) returns (Message){}
 
 }
 
 service Broker {
 
-    rpc Hola(Message)returns(Message){}
-    
+    rpc DNSIsAvailable(Message) returns (DNSState){}
+    rpc GetIP(Command) returns (PageInfo){}
+
 }
 
 message Message {
     string text = 1; 
+}
+
+message DNSState{
+    bool dns1 = 1;
+    bool dns2 = 2;
+    bool dns3 = 3;
+}
+
+message Command{
+    int32 action = 1;
+    string name = 2;
+    string domain = 3;
+    string option = 4;
+    string parameter = 5;
+}
+
+message VectorClock{
+    int32 rv1 = 1;
+    int32 rv2 = 2;
+    int32 rv3 = 3;
+}
+
+message PageInfo{
+    string ip = 1;
+    VectorClock rv = 2;
+}
+
+message Log{
+    string name = 1;
+    bytes data = 2;
 }
