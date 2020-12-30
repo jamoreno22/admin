@@ -14,11 +14,11 @@ import (
 
 func main() {
 
-	var brokerIp string
-	brokerIp = "10.10.28.20:8000"
+	var brokerIP string
+	brokerIP = "10.10.28.20:8000"
 	var conn *grpc.ClientConn
 
-	conn, err := grpc.Dial(brokerIp, grpc.WithInsecure())
+	conn, err := grpc.Dial(brokerIP, grpc.WithInsecure())
 	if err != nil {
 		log.Fatalf("did not connect: %s", err)
 	}
@@ -43,7 +43,7 @@ func main() {
 			comm = l3.Command{action: 3, name: split2[0], domain: split2[1], option: "", parameter: ""}
 		default:
 			log.Println("Ingrese un comando válido")
-			break
+			continue
 		}
 		runDNSIsAvailable(ac, command)
 	}
