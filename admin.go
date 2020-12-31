@@ -12,6 +12,14 @@ import (
 	"google.golang.org/grpc"
 )
 
+type consistency struct {
+	zfName string
+	rv     l3.VectorClock
+	ip     string
+}
+
+var cons consistency
+
 func main() {
 
 	var brokerIP string
