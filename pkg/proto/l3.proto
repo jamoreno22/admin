@@ -35,6 +35,7 @@ message Command{
     string domain = 3;
     string option = 4;
     string parameter = 5;
+    string ip = 6;
 }
 
 message VectorClock{

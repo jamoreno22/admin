@@ -31,7 +31,7 @@ func main() {
 		log.Fatalf("did not connect: %s", err)
 	}
 
-	ac := l3.NewBrokerClient
+	bc := l3.NewBrokerClient(conn)
 
 	var command string
 	var comm l3.Command
@@ -44,24 +44,48 @@ func main() {
 		split2 := strings.Split(split[0], ".")
 		switch split[0] {
 		case "Create":
-			comm = l3.Command{action: 1, name: split2[0], domain: split2[1], option: "", parameter: ""}
+			comm = l3.Command{Action: 1, Name: split2[0], Domain: split2[1], Option: "", Parameter: "", Ip: "10.10.10.10"}
 		case "Update":
-			comm = l3.Command{action: 2, name: split2[0], domain: split2[1], option: split[2], parameter: split[3]}
+			comm = l3.Command{Action: 2, Name: split2[0], Domain: split2[1], Option: split[2], Parameter: split[3]}
 		case "Delete":
-			comm = l3.Command{action: 3, name: split2[0], domain: split2[1], option: "", parameter: ""}
+			comm = l3.Command{Action: 3, Name: split2[0], Domain: split2[1], Option: "", Parameter: ""}
 		default:
 			log.Println("Ingrese un comando válido")
 			continue
 		}
-		runDNSIsAvailable(ac, command)
+
+		var dnsIP string
+		dnsIP = runDNSIsAvailable(bc, command)
+		var conn1 *grpc.ClientConn
+
+		conn1, err1 := grpc.Dial(dnsIP, grpc.WithInsecure())
+		if err1 != nil {
+			log.Fatalf("did not connect: %s", err)
+		}
+
+		dnsc := l3.NewDNSClient(conn1)
+
+		dnsc.Action(context.Background(), &comm)
 	}
 
 }
 
-func runDNSIsAvailable(ac l3.BrokerClient, comm string) error {
-	msg := l3.Message{text: comm}
-	_, err := l3.DNSIsAvailable(context.Background(), &msg)
-	return err
+func runDNSIsAvailable(bc l3.BrokerClient, comm string) string {
+	msg := l3.Message{Text: comm}
+	state, err := bc.DNSIsAvailable(context.Background(), &msg)
+	if err != nil {
+		fmt.Println("DNSIsAvailable error")
+	}
+	dnsIps := []string{"10.10.28.17:8000", "10.10.28.18:8000", "10.10.28.19:8000"}
+	if state.Dns1 == true {
+		return dnsIps[0]
+	} else if state.Dns2 == true {
+		return dnsIps[1]
+	} else if state.Dns3 == true {
+		return dnsIps[2]
+	}
+	log.Fatalln("Dns servers not available")
+	return "Dns not available"
 }
 
 func pingDataNode(ip string) bool {
