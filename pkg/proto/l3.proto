@@ -39,9 +39,10 @@ message Command{
 }
 
 message VectorClock{
-    int32 rv1 = 1;
-    int32 rv2 = 2;
-    int32 rv3 = 3;
+    string name = 1;
+    int32 rv1 = 2;
+    int32 rv2 = 3;
+    int32 rv3 = 4;
 }
 
 message PageInfo{
