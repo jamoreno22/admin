@@ -16,9 +16,10 @@ type consistency struct {
 	zfName string
 	rv     l3.VectorClock
 	ip     string
+	com    l3.Command
 }
 
-var cons consistency
+var consList []consistency
 
 func main() {
 
@@ -44,11 +45,14 @@ func main() {
 		split2 := strings.Split(split[0], ".")
 		switch split[0] {
 		case "Create":
-			comm = l3.Command{Action: 1, Name: split2[0], Domain: split2[1], Option: "", Parameter: "", Ip: "10.10.10.10"}
+			comm = l3.Command{Action: 1, Name: split2[0], Domain: split2[1],
+				Option: "", Parameter: "", Ip: "10.10.10.10"}
 		case "Update":
-			comm = l3.Command{Action: 2, Name: split2[0], Domain: split2[1], Option: split[2], Parameter: split[3]}
+			comm = l3.Command{Action: 2, Name: split2[0], Domain: split2[1],
+				Option: split[2], Parameter: split[3], Ip: ""}
 		case "Delete":
-			comm = l3.Command{Action: 3, Name: split2[0], Domain: split2[1], Option: "", Parameter: ""}
+			comm = l3.Command{Action: 3, Name: split2[0], Domain: split2[1],
+				Option: "", Parameter: "", Ip: ""}
 		default:
 			log.Println("Ingrese un comando válido")
 			continue
@@ -66,6 +70,11 @@ func main() {
 		dnsc := l3.NewDNSClient(conn1)
 
 		dnsc.Action(context.Background(), &comm)
+
+		var rv l3.VectorClock
+
+		newConsistency(comm.Domain, rv, "una ip, no estoy segura de cuál", comm)
+
 	}
 
 }
@@ -95,4 +104,21 @@ func pingDataNode(ip string) bool {
 		return false
 	}
 	return true
+}
+
+func newConsistency(zfName string, rv l3.VectorClock, ip string, com l3.Command) {
+	var flag = false
+	if len(consList) != 0 {
+		for _, s := range consList {
+			if s.zfName == zfName {
+				flag = true
+			}
+		}
+	}
+	if flag {
+		log.Println("ya ta")
+		//comparar relojes de vectores i guess, idk
+	} else {
+		consList = append(consList, consistency{zfName: zfName, rv: rv, ip: ip, com: com})
+	}
 }
