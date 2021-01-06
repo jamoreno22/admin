@@ -12,16 +12,17 @@ import (
 	"google.golang.org/grpc"
 )
 
-type consistency struct {
+// Consistency struct
+type Consistency struct {
 	zfName string
 	rv     l3.VectorClock
 	ip     string
 	com    l3.Command
 }
 
-var consList []consistency
+var consList []*Consistency
 
-var actionRv l3.VectorClock
+var actionRv *l3.VectorClock
 
 func main() {
 
@@ -71,12 +72,12 @@ func main() {
 
 		dnsc := l3.NewDNSClient(conn1)
 
-		actionRv = dnsc.Action(context.Background(), &comm)
+		actionRv, _ = dnsc.Action(context.Background(), &comm)
 
 		var rv l3.VectorClock
 		rv = l3.VectorClock{Name: comm.Domain, Rv1: 0, Rv2: 0, Rv3: 0}
 
-		newConsistency(comm.Domain, rv, dnsIP, comm)
+		newConsistency(comm.Domain, &rv, &dnsIP, &comm)
 
 	}
 
@@ -109,7 +110,7 @@ func pingDataNode(ip string) bool {
 	return true
 }
 
-func newConsistency(zfName string, rv l3.VectorClock, ip string, com l3.Command) {
+func newConsistency(zfName string, rv *l3.VectorClock, ip *string, com *l3.Command) {
 	var flag = false
 	if len(consList) != 0 {
 		for _, s := range consList {
@@ -119,7 +120,7 @@ func newConsistency(zfName string, rv l3.VectorClock, ip string, com l3.Command)
 		}
 	}
 	if flag {
-		spl := strings.Split(ip, ".")
+		spl := strings.Split(*ip, ".")
 		switch spl[3] {
 		case "17":
 			if rv.Rv1 >= actionRv.Rv1 {
@@ -160,6 +161,6 @@ func newConsistency(zfName string, rv l3.VectorClock, ip string, com l3.Command)
 		}
 
 	} else {
-		consList = append(consList, consistency{zfName: zfName, rv: rv, ip: ip, com: com})
+		consList = append(consList, &Consistency{zfName: zfName, rv: *rv, ip: *ip, com: *com})
 	}
 }
