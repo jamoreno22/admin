@@ -74,7 +74,7 @@ func main() {
 		actionRv = dnsc.Action(context.Background(), &comm)
 
 		var rv l3.VectorClock
-		rv = l3.VectorClock{name: comm.Name, rv1: 0, rv2: 0, rv3: 0}
+		rv = l3.VectorClock{Name: comm.Domain, Rv1: 0, Rv2: 0, Rv3: 0}
 
 		newConsistency(comm.Domain, rv, dnsIP, comm)
 
@@ -113,7 +113,7 @@ func newConsistency(zfName string, rv l3.VectorClock, ip string, com l3.Command)
 	var flag = false
 	if len(consList) != 0 {
 		for _, s := range consList {
-			if s.zfName == zfName {
+			if s.ZfName == zfName {
 				flag = true
 			}
 		}
@@ -122,15 +122,15 @@ func newConsistency(zfName string, rv l3.VectorClock, ip string, com l3.Command)
 		spl := strings.Split(ip, ".")
 		switch spl[3] {
 		case "17":
-			if rv.rv1 >= actionRv.rv1 {
+			if rv.Rv1 >= actionRv.Rv1 {
 				log.Println("Existe un error en la consistencia")
 			}
 		case "18":
-			if rv.rv2 >= actionRv.rv2 {
+			if rv.Rv2 >= actionRv.Rv2 {
 				log.Println("Existe un error en la consistencia")
 			}
 		case "19":
-			if rv.rv3 >= actionRv.rv3 {
+			if rv.Rv3 >= actionRv.Rv3 {
 				log.Println("Existe un error en la consistencia")
 			}
 		}
