@@ -128,7 +128,7 @@ func newConsistency(zfName string, rv *l3.VectorClock, ip *string, com *l3.Comma
 			} else {
 				for _, s := range consList {
 					if s.zfName == zfName {
-						s.ip = ip
+						s.ip = *ip
 						s.rv = actionRv
 						s.com = com
 					}
@@ -140,7 +140,7 @@ func newConsistency(zfName string, rv *l3.VectorClock, ip *string, com *l3.Comma
 			} else {
 				for _, s := range consList {
 					if s.zfName == zfName {
-						s.ip = ip
+						s.ip = *ip
 						s.rv = actionRv
 						s.com = com
 					}
@@ -152,7 +152,7 @@ func newConsistency(zfName string, rv *l3.VectorClock, ip *string, com *l3.Comma
 			} else {
 				for _, s := range consList {
 					if s.zfName == zfName {
-						s.ip = ip
+						s.ip = *ip
 						s.rv = actionRv
 						s.com = com
 					}
