@@ -113,7 +113,7 @@ func newConsistency(zfName string, rv l3.VectorClock, ip string, com l3.Command)
 	var flag = false
 	if len(consList) != 0 {
 		for _, s := range consList {
-			if s.ZfName == zfName {
+			if s.zfName == zfName {
 				flag = true
 			}
 		}
