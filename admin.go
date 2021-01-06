@@ -74,10 +74,64 @@ func main() {
 
 		actionRv, _ = dnsc.Action(context.Background(), &comm)
 
-		var rv l3.VectorClock
-		rv = l3.VectorClock{Name: comm.Domain, Rv1: 0, Rv2: 0, Rv3: 0}
+		//newConsistency(comm.Domain, &dnsIP, &comm)
 
-		newConsistency(comm.Domain, &rv, &dnsIP, &comm)
+		if len(consList) != 0 {
+			for _, s := range consList {
+				if s.zfName == comm.Domain {
+					localConsistency := s
+					spl := strings.Split(dnsIP, ".")
+					switch spl[3] {
+					case "17":
+						if localConsistency.rv.Rv1 >= actionRv.Rv1 {
+							log.Println("Existe un error en la consistencia")
+						} else {
+							s.ip = dnsIP
+							s.rv.Rv1 = actionRv.Rv1
+							s.rv.Rv2 = actionRv.Rv2
+							s.rv.Rv3 = actionRv.Rv3
+							s.com.Domain = comm.Domain
+							s.com.Ip = comm.Ip
+							s.com.Name = comm.Name
+							s.com.Option = comm.Option
+							s.com.Parameter = comm.Parameter
+						}
+					case "18":
+						if localConsistency.rv.Rv2 >= actionRv.Rv2 {
+							log.Println("Existe un error en la consistencia")
+						} else {
+							s.ip = dnsIP
+							s.ip = dnsIP
+							s.rv.Rv1 = actionRv.Rv1
+							s.rv.Rv2 = actionRv.Rv2
+							s.rv.Rv3 = actionRv.Rv3
+							s.com.Domain = comm.Domain
+							s.com.Ip = comm.Ip
+							s.com.Name = comm.Name
+							s.com.Option = comm.Option
+							s.com.Parameter = comm.Parameter
+						}
+					case "19":
+						if localConsistency.rv.Rv3 >= actionRv.Rv3 {
+							log.Println("Existe un error en la consistencia")
+						} else {
+							s.ip = dnsIP
+							s.rv.Rv1 = actionRv.Rv1
+							s.rv.Rv2 = actionRv.Rv2
+							s.rv.Rv3 = actionRv.Rv3
+							s.com.Domain = comm.Domain
+							s.com.Ip = comm.Ip
+							s.com.Name = comm.Name
+							s.com.Option = comm.Option
+							s.com.Parameter = comm.Parameter
+						}
+					}
+				}
+			}
+		} else {
+			consList = append(consList, &Consistency{zfName: comm.Domain, rv: l3.VectorClock{Name: comm.Domain, Rv1: 0, Rv2: 0, Rv3: 0},
+				ip: dnsIP, com: l3.Command{Action: comm.Action, Name: comm.Name, Domain: comm.Domain, Option: comm.Option, Parameter: comm.Parameter, Ip: comm.Ip}})
+		}
 
 	}
 
@@ -108,59 +162,4 @@ func pingDataNode(ip string) bool {
 		return false
 	}
 	return true
-}
-
-func newConsistency(zfName string, rv *l3.VectorClock, ip *string, com *l3.Command) {
-	var flag = false
-	if len(consList) != 0 {
-		for _, s := range consList {
-			if s.zfName == zfName {
-				flag = true
-			}
-		}
-	}
-	if flag {
-		spl := strings.Split(*ip, ".")
-		switch spl[3] {
-		case "17":
-			if rv.Rv1 >= actionRv.Rv1 {
-				log.Println("Existe un error en la consistencia")
-			} else {
-				for _, s := range consList {
-					if s.zfName == zfName {
-						s.ip = *ip
-						s.rv = *actionRv
-						s.com = *com
-					}
-				}
-			}
-		case "18":
-			if rv.Rv2 >= actionRv.Rv2 {
-				log.Println("Existe un error en la consistencia")
-			} else {
-				for _, s := range consList {
-					if s.zfName == zfName {
-						s.ip = *ip
-						s.rv = *actionRv
-						s.com = *com
-					}
-				}
-			}
-		case "19":
-			if rv.Rv3 >= actionRv.Rv3 {
-				log.Println("Existe un error en la consistencia")
-			} else {
-				for _, s := range consList {
-					if s.zfName == zfName {
-						s.ip = *ip
-						s.rv = *actionRv
-						s.com = *com
-					}
-				}
-			}
-		}
-
-	} else {
-		consList = append(consList, &Consistency{zfName: zfName, rv: *rv, ip: *ip, com: *com})
-	}
 }
