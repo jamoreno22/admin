@@ -124,14 +124,38 @@ func newConsistency(zfName string, rv l3.VectorClock, ip string, com l3.Command)
 		case "17":
 			if rv.Rv1 >= actionRv.Rv1 {
 				log.Println("Existe un error en la consistencia")
+			} else {
+				for _, s := range consList {
+					if s.zfName == zfName {
+						s.ip = ip
+						s.rv = actionRv
+						s.com = com
+					}
+				}
 			}
 		case "18":
 			if rv.Rv2 >= actionRv.Rv2 {
 				log.Println("Existe un error en la consistencia")
+			} else {
+				for _, s := range consList {
+					if s.zfName == zfName {
+						s.ip = ip
+						s.rv = actionRv
+						s.com = com
+					}
+				}
 			}
 		case "19":
 			if rv.Rv3 >= actionRv.Rv3 {
 				log.Println("Existe un error en la consistencia")
+			} else {
+				for _, s := range consList {
+					if s.zfName == zfName {
+						s.ip = ip
+						s.rv = actionRv
+						s.com = com
+					}
+				}
 			}
 		}
 
