@@ -21,6 +21,8 @@ type consistency struct {
 
 var consList []consistency
 
+var actionRv l3.VectorClock
+
 func main() {
 
 	var brokerIP string
@@ -69,11 +71,12 @@ func main() {
 
 		dnsc := l3.NewDNSClient(conn1)
 
-		dnsc.Action(context.Background(), &comm)
+		actionRv = dnsc.Action(context.Background(), &comm)
 
 		var rv l3.VectorClock
+		rv = l3.VectorClock{name: comm.Name, rv1: 0, rv2: 0, rv3: 0}
 
-		newConsistency(comm.Domain, rv, "una ip, no estoy segura de cuál", comm)
+		newConsistency(comm.Domain, rv, dnsIP, comm)
 
 	}
 
@@ -116,8 +119,22 @@ func newConsistency(zfName string, rv l3.VectorClock, ip string, com l3.Command)
 		}
 	}
 	if flag {
-		log.Println("ya ta")
-		//comparar relojes de vectores i guess, idk
+		spl := strings.Split(ip, ".")
+		switch spl[3] {
+		case "17":
+			if rv.rv1 >= actionRv.rv1 {
+				log.Println("Existe un error en la consistencia")
+			}
+		case "18":
+			if rv.rv2 >= actionRv.rv2 {
+				log.Println("Existe un error en la consistencia")
+			}
+		case "19":
+			if rv.rv3 >= actionRv.rv3 {
+				log.Println("Existe un error en la consistencia")
+			}
+		}
+
 	} else {
 		consList = append(consList, consistency{zfName: zfName, rv: rv, ip: ip, com: com})
 	}
