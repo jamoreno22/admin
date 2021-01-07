@@ -57,7 +57,7 @@ func main() {
 		fmt.Println("Ingrese comando")
 		fmt.Scanln(&command)
 		split := strings.Split(command, " ")
-		split2 := strings.Split(split[0], ".")
+		split2 := strings.Split(split[1], ".")
 		log.Println(split)
 		log.Println(split2)
 		switch split[0] {
