@@ -40,8 +40,19 @@ func main() {
 	var command string
 	var comm l3.Command
 
+	var dnsIP string
+	dnsIP = runDNSIsAvailable(bc, command)
+	var conn1 *grpc.ClientConn
+
+	conn1, err1 := grpc.Dial(dnsIP, grpc.WithInsecure())
+	if err1 != nil {
+		log.Fatalf("did not connect: %s", err)
+	}
+
+	dnsc := l3.NewDNSClient(conn1)
+
 	defer conn.Close()
-	flag := true
+
 	for {
 		fmt.Println("Ingrese comando")
 		fmt.Scanln(&command)
@@ -60,20 +71,6 @@ func main() {
 		default:
 			log.Println("Ingrese un comando válido")
 			continue
-		}
-
-		if flag {
-			var dnsIP string
-			dnsIP = runDNSIsAvailable(bc, command)
-			var conn1 *grpc.ClientConn
-
-			conn1, err1 := grpc.Dial(dnsIP, grpc.WithInsecure())
-			if err1 != nil {
-				log.Fatalf("did not connect: %s", err)
-			}
-
-			dnsc := l3.NewDNSClient(conn1)
-			flag = false
 		}
 
 		actionRv, _ = dnsc.Action(context.Background(), &comm)
