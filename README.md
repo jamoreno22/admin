@@ -39,4 +39,4 @@ Para poder utilizar el código se deben seguir los siguientes pasos:
 >``Get uwu.cl``
 
 
-Esperamos que no sea muy ardua su tarea de revisar uwu
+Esperamos que no sea muy ardua su tarea de revisar uwu, tuvimos un problema al momento de realizar la tarea, un integrante del equipo pensó que la entrega era para el día 11 de enero y por esto no pudimos terminar adecuadamente, no es justificación, pero nos hubiera gustado entregar un trabajo mejor hecho
