@@ -69,7 +69,7 @@ func main() {
 				Option: "", Parameter: "", Ip: "10.10.10.10"}
 		case "Update":
 			comm = l3.Command{Action: 2, Name: split2[0], Domain: split2[1],
-				Option: split[2], Parameter: split[3], Ip: ""}
+				Option: split[2], Parameter: split[3], Ip: split[3]}
 		case "Delete":
 			comm = l3.Command{Action: 3, Name: split2[0], Domain: split2[1],
 				Option: "", Parameter: "", Ip: ""}
