@@ -20,6 +20,7 @@ type DNSClient interface {
 	Ping(ctx context.Context, in *Message, opts ...grpc.CallOption) (*Message, error)
 	Action(ctx context.Context, in *Command, opts ...grpc.CallOption) (*VectorClock, error)
 	Spread(ctx context.Context, in *Log, opts ...grpc.CallOption) (*Message, error)
+	GetIP(ctx context.Context, in *Command, opts ...grpc.CallOption) (*PageInfo, error)
 }
 
 type dNSClient struct {
@@ -57,6 +58,15 @@ func (c *dNSClient) Spread(ctx context.Context, in *Log, opts ...grpc.CallOption
 	return out, nil
 }
 
+func (c *dNSClient) GetIP(ctx context.Context, in *Command, opts ...grpc.CallOption) (*PageInfo, error) {
+	out := new(PageInfo)
+	err := c.cc.Invoke(ctx, "/lab3.DNS/GetIP", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // DNSServer is the server API for DNS service.
 // All implementations must embed UnimplementedDNSServer
 // for forward compatibility
@@ -64,6 +74,7 @@ type DNSServer interface {
 	Ping(context.Context, *Message) (*Message, error)
 	Action(context.Context, *Command) (*VectorClock, error)
 	Spread(context.Context, *Log) (*Message, error)
+	GetIP(context.Context, *Command) (*PageInfo, error)
 	mustEmbedUnimplementedDNSServer()
 }
 
@@ -79,6 +90,9 @@ func (UnimplementedDNSServer) Action(context.Context, *Command) (*VectorClock, e
 }
 func (UnimplementedDNSServer) Spread(context.Context, *Log) (*Message, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Spread not implemented")
+}
+func (UnimplementedDNSServer) GetIP(context.Context, *Command) (*PageInfo, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetIP not implemented")
 }
 func (UnimplementedDNSServer) mustEmbedUnimplementedDNSServer() {}
 
@@ -147,6 +161,24 @@ func _DNS_Spread_Handler(srv interface{}, ctx context.Context, dec func(interfac
 	return interceptor(ctx, in, info, handler)
 }
 
+func _DNS_GetIP_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(Command)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(DNSServer).GetIP(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/lab3.DNS/GetIP",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(DNSServer).GetIP(ctx, req.(*Command))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // DNS_ServiceDesc is the grpc.ServiceDesc for DNS service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -165,6 +197,10 @@ var DNS_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Spread",
 			Handler:    _DNS_Spread_Handler,
+		},
+		{
+			MethodName: "GetIP",
+			Handler:    _DNS_GetIP_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

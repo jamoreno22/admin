@@ -6,3 +6,4 @@
 * Crear la lógica del cliente del DNS en los otros DNS para mantener la consistencia
 * Implementar los 3 tipos de consistencia en los nodos correspondientes
 * Crear el UI (ingreso de comandos por consola) tanto en Client como en Admin
+* Editar el proto agregando el DNS ip al pageInfo
