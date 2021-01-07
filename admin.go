@@ -79,6 +79,7 @@ func main() {
 			log.Println("Ingrese un comando válido")
 			continue
 		}
+		log.Println(comm.Name)
 
 		actionRv, _ = dnsc.Action(context.Background(), &comm)
 
