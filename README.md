@@ -25,6 +25,18 @@ Para poder utilizar el código se deben seguir los siguientes pasos:
 >``make client``
 
 
-Los comandos deben ser ingresados como se explica en el enunciado, es decir, estos deben ser {Create, Update, Delete, Get} y deben ser seguidos por un espacio y el nombre.dominio, en otras palabras, comandos del tipo "www.google.com" no funcionarán.
+-Los comandos deben ser ingresados como se explica en el enunciado, es decir, estos deben ser {Create, Update, Delete, Get} y deben ser seguidos por un espacio y el nombre.dominio, en otras palabras, comandos del tipo "www.google.com" no funcionarán.
 
-Para terminar debemos mencionar que no se estableció cómo se le ingresaría la IP al momento de crear una nueva ruta, por lo que optamos por poner una por default, que debe ser cambiada con el comando "Update".
+-Para terminar debemos mencionar que no se estableció cómo se le ingresaría la IP al momento de crear una nueva ruta, por lo que optamos por poner una por default, que debe ser cambiada con el comando "Update".
+
+-Ejemplos de los comandos son:
+
+>``Create owo.cl``
+>``Update owo.cl Name uwu``
+>``Update uwu.cl IP 10.10.18.90``
+>``Delete uwu.cl``
+
+>``Get uwu.cl``
+
+
+Esperamos que no sea muy ardua su tarea de revisar uwu
