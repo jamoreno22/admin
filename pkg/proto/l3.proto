@@ -48,7 +48,7 @@ message VectorClock{
 }
 
 message PageInfo{
-    string ip = 1;
+    string pageIp = 1;
     VectorClock rv = 2;
     string dnsIP = 3;
 }
