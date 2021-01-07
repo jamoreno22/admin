@@ -1,10 +1,12 @@
 package main
 
 import (
+	"bufio"
 	"context"
 	"fmt"
 	"log"
 	"net"
+	"os"
 	"strings"
 	"time"
 
@@ -55,8 +57,10 @@ func main() {
 
 	for {
 		fmt.Println("Ingrese comando")
-		fmt.Scanln(&command)
-		log.Println(command)
+		scanner := bufio.NewScanner(os.Stdin)
+		if scanner.Scan() {
+			command = scanner.Text()
+		}
 		split := strings.Split(command, " ")
 		split2 := strings.Split(split[1], ".")
 		log.Println(len(split))
