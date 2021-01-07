@@ -41,6 +41,7 @@ func main() {
 	var comm l3.Command
 
 	defer conn.Close()
+	flag := true
 	for {
 		fmt.Println("Ingrese comando")
 		fmt.Scanln(&command)
@@ -61,16 +62,19 @@ func main() {
 			continue
 		}
 
-		var dnsIP string
-		dnsIP = runDNSIsAvailable(bc, command)
-		var conn1 *grpc.ClientConn
+		if flag {
+			var dnsIP string
+			dnsIP = runDNSIsAvailable(bc, command)
+			var conn1 *grpc.ClientConn
 
-		conn1, err1 := grpc.Dial(dnsIP, grpc.WithInsecure())
-		if err1 != nil {
-			log.Fatalf("did not connect: %s", err)
+			conn1, err1 := grpc.Dial(dnsIP, grpc.WithInsecure())
+			if err1 != nil {
+				log.Fatalf("did not connect: %s", err)
+			}
+
+			dnsc := l3.NewDNSClient(conn1)
+			flag = false
 		}
-
-		dnsc := l3.NewDNSClient(conn1)
 
 		actionRv, _ = dnsc.Action(context.Background(), &comm)
 
