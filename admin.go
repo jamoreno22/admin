@@ -63,8 +63,6 @@ func main() {
 		}
 		split := strings.Split(command, " ")
 		split2 := strings.Split(split[1], ".")
-		log.Println(split)
-		log.Println(split2)
 		switch split[0] {
 		case "Create":
 			comm = l3.Command{Action: 1, Name: split2[0], Domain: split2[1],
